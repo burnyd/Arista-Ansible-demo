@@ -1,0 +1,38 @@
+---
+
+- hosts: leafs
+  connection: local
+  gather_facts: yes 
+
+  vars_files:
+  - "group_vars/all.yaml"  
+
+  tasks:
+
+  - name: Configure Arista Vlans
+
+    eos_config:
+
+      src: vlans.j2
+
+      provider: "{{ eos_connection }}"
+
+  - name: Configure Arista SVIs Vlans
+
+    eos_config:
+
+      src: svivlans.j2
+
+      provider: "{{ eos_connection }}"
+
+
+  - name: send some commands  
+
+    eos_command:
+
+      commands: show vlan id {{ vlans[0].vlanid }}
+
+     # wait_for: result[0] contains host
+      
+      provider: "{{ eos_connection }}"
+
